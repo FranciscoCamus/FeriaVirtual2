@@ -1,0 +1,51 @@
+{% extends "auctions/base_subastas.html" %}
+
+{% load humanize %}
+
+{% block content %}
+<h1 class="maintitle" style="color: white; text-align: center; margin-top: 30px;">Subastas activas</h1>
+
+<div class="container">
+<div class="row">
+
+{% for listing in active_listings %}
+
+
+        <div class="col-md-3">
+
+            <div class="card" style="margin: 20px 0px 0px 0px;">
+
+                <img class="card-img-top" src="{{ listing.img_url.url }}" alt="" style="height: 200px;">
+
+
+                <div class="card-body" style="text-align: center; width: 100%; height: 200px; background-color: aqua;">
+
+                    <h3 class="card-title">{{listing.title}}</h3>
+
+                    <p class="card-text">{{listing.description | truncatechars:100}}</p>
+
+                    <h2 style="color: black">$ <strong>{{ id_and_bid | get_bid:listing.id |floatformat:0 }}  </strong></h2>
+
+                </div>
+
+                <div class="card-footer text-center" style="background-color: bisque;">
+
+                    <a href="{% url 'listing' listing.id %}" class="btn btn-primary">Ingresar!</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+{% endfor %}
+
+</div>
+</div>
+{% endblock %}
+
+

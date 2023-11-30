@@ -1,0 +1,304 @@
+{% extends "auctions/base_subastas.html" %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+<h1 class="maintitle" style="margin-top: 30px;">{{listing.title}}</h1>
+<br>
+
+{% if messages %}
+        <div id="messages" style="display: none;">
+            {% for m in messages %}
+                <div data-tag="{{ m.tags }}" data-message="{{ m }}"></div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="container" style="margin-left: 200px; display: flex;flex-wrap: wrap; align-items: center;">
+
+    <div class="card cardstyle" style="text-align: center;">
+        <img class="card-img-top" src="{{listing.img_url.url}}" alt="" style="border-radius: 20px;">
+        <div class="card-body">
+            <h6 class="maintitle" style="color: yellow;"><strong>La oferta más alta hasta el momento::</strong></h6>
+            <h1 style="color: black">$ <strong>{{current_bid.highest_bid |floatformat:0}}</strong> </h1></p>
+            Oferta realizada en: {{current_bid.last_bid_date}} por el usuario: <strong>{{ current_bid.highest_bid_user }}</strong>
+        </div>
+    </div>
+
+    <div class="card cardstyle">
+        <div class="card-body">
+          <h5 class="maintitle">Subasta publicada por: </h5> {{listing.author}}
+          <h5 class="maintitle">Oferta inicial: </h5> $ {{listing.starting_bid |floatformat:0 }} 
+          <h5 class="maintitle">Fecha de creación: </h5> {{listing.creation_date}}
+          <h5 class="maintitle">Categoría: </h5> {{category}}
+          <h5 class="maintitle">Descripción: </h5> {{listing.description}}
+          <h5 class="maintitle">Correo autor: </h5> {{listing.author.email}}
+
+        </div>
+    </div>
+
+    <div class="card cardstyle">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                {% if user == listing.author %}
+                    {% if listing.active_status %}
+                    <form action="{% url 'close_bid' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger" value="Cerrar esta subasta">
+                    </form>
+                    {% else%}
+                    <h3 class="maintitle" style="color: orangered;">- Subasta cerrada -</h3>
+                    {% endif %}
+                
+                {% else %} 
+                <!-- -->
+                    {% if listing.active_status %}
+
+                        <div>
+                            <a id="hide1" href="#hide1" class="hide"><button type="button" class="btn btn-success">Haga su oferta aquí !</button></a>
+                            <a id="show1" href="#show1" class="show"><button type="button" class="btn btn-success">Haga su oferta aquí !</button></a>
+                            <div class="details">
+                                <form action="{% url 'new_bid' listing.id %}" method="POST">
+                                    {% csrf_token %}  
+                                    {{bidform}}
+                                    <input type="submit" value="Ofertar!">
+                                </form> 
+                            </div>
+                        </div>
+
+                    
+                        <br>
+                        <h5 class="maintitle"> o </h5>
+                        <br>
+                        {% if usertocheck %}
+                            <form action="{% url 'remove_watchlist' listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger" value="Quitar de mis subastas">
+                            </form> 
+                        {% else %}
+                            <form action="{% url 'add_watchlist' listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-primary" value="Añadir a mis subastas">
+                            </form>
+                        {% endif %}
+                            
+
+
+                    {% else %}
+                        
+                        <!-- winner-->
+                        {% if user == current_bid.highest_bid_user %}
+                            <img src="{% static 'FeriaVirtualApp/img/congrats.gif' %}" alt="" style="height: 150px;">
+                            <h3 class="maintitle" style="color: gold;">Felicitaciones !!</h3>
+                            <br>
+                            <h5 class="maintitle">Ganaste la subasta !!</h5>
+                            <h6>Ponte en contacto con el usuario: <strong>{{listing.author}}</strong> con dirección de correo electrónico: <strong>{{listing.author.email}}</strong> para coordinar el envío.</h6>
+                            <br>
+                            <img src="{% static 'FeriaVirtualApp/img/congrats.gif' %}" alt="" style="height: 150px;">
+                        {% else %}
+                            <h3 class="maintitle" style="color:orangered;">- Subasta cerrada -</h3>
+                        {% endif %}
+                    {% endif %}
+                
+                    
+                {% endif %}
+
+            {% else %}
+
+            <a href="{% url 'login' %}" ><button type="button" class="btn btn-primary" style="color: white;">Log in</button></a>
+
+            to place bids or add items to your watchlist !
+
+            {% endif %}
+
+
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<h4 class="maintitle">Comentarios de la subasta:</h4>
+<hr>
+
+
+{% for post in comments_list %}
+    <div class="commentbox">
+        {% if post.post_author == listing.author %}
+        <span style="color: white;">[Autor]</span> <img src="{% static 'FeriaVirtualApp/img/crown.png' %}" alt="" style="height: 25px;">
+        {% endif %}
+        Publicado por <strong>{{post.post_author}}</strong> en {{post.commentary_date}}
+        <br>
+        <div class="commentline"></div>
+        <br>
+
+        {{post.comment}}
+    </div>
+    <hr>
+
+{% endfor %}
+
+
+<br>
+
+
+{% if user.is_authenticated %}
+    {% if listing.active_status %}
+    <div class="cardstyle" style="width: 30rem; margin:auto">
+
+        <br>
+        <h6 class="maintitle"> Añade tu comentario aquí!</h6>
+        <br>
+        <form action="{% url 'new_comment' listing.id %}" method="POST">
+            {% csrf_token %}
+            {{comment}}
+            <br><br>          
+            <div class="maintitle"><input type="submit" class="btn btn-primary mb-2" value="Publicar!"/></div> 
+        </form>
+
+    </div>
+    {% else %}
+        <h5 class="maintitle">Esta subasta esta cerrada. Los comentarios están desactivados.</h5>
+    {% endif %}
+      
+
+{% else %}
+
+<div style="margin: auto; text-align: center;">
+
+    <a href="{% url 'login' %}" ><button type="button" class="btn btn-primary" style="color: white;">Log in</button></a>
+    to post and communicate with other bidders !
+
+</div>
+
+
+
+{% endif %}
+
+<style>
+
+
+
+
+.cardstyle {
+    width: 18rem;
+    /* background-image: linear-gradient(#3CB371, LightSeaGreen ); */
+    background-image: linear-gradient(DeepSkyBlue, LightBlue);
+    border-radius: 20px; 
+    border: 3px solid Linen; 
+    box-shadow: 3px 3px black;
+    margin: 20px;
+    text-align: center;
+}
+
+.maintitle {
+
+    text-align: center;
+    color: beige;
+    text-shadow: 2px 2px 8px black;
+    margin: auto;
+}
+
+
+
+.commentscontainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+
+
+
+
+/*  A clever way I found on the internet to add a collapsible button without Javascript */
+
+.details,
+.show,
+.hide:target {
+  display: none;
+}
+.hide:target + .show,
+.hide:target ~ .details {
+  display: block;
+}
+
+
+
+
+.commentbox {
+
+    background-image: linear-gradient(#3CB371, LightSeaGreen);
+    border-radius: 20px; 
+    border: 3px solid Linen; 
+    box-shadow: 3px 3px black;
+    margin: 20px;
+    padding: 20px;
+
+}
+
+
+
+
+
+
+.commentline {
+    border-top: 2px solid linen;
+    margin-top: 10px;
+    width: 100%;
+}
+
+
+
+</style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var messagesContainer = document.getElementById('messages');
+        if (messagesContainer) {
+            var messages = messagesContainer.children;
+
+            for (var i = 0; i < messages.length; i++) {
+                var message = messages[i];
+                var tag = message.getAttribute('data-tag');
+                var text = message.getAttribute('data-message');
+
+                var title;
+                if (tag === 'success') {
+                    title = 'Felicitaciones'; // Cambia el título para 'success'
+                } else if (tag === 'error') {
+                    title = 'Error'; // Cambia el título para 'error'
+                } else if (tag === 'danger') {
+                    title = 'Atención'; // Cambia el título para 'danger'
+                } else {
+                    title = 'Información'; // Otros casos
+                }
+
+                var icon;
+                if (tag === 'success') {
+                    icon = 'success';
+                } else if (tag === 'error') {
+                    icon = 'error';
+                } else {
+                    icon = 'info';
+                }
+
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon
+                });
+            }
+        }
+    });
+</script>
+
+
+{% endblock %}

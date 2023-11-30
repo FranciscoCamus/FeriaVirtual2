@@ -1,0 +1,31 @@
+{% extends "FeriaVirtualApp/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="container d-flex justify-content-center text-center">
+    <div class="col-md-6">
+        <div class="card mx-auto" style="margin: 20px 0px 0px 0px; width: 400px; ">
+            <img src="{% static 'FeriaVirtualApp/img/exportaciones.jpg' %}" alt="imagen" height="300px">
+            <div class="card-body" style="height: 210px; background-color: aqua;">
+                <h1 class="card-title">Subastas</h1>
+                <p class="card-text">Participa en subastas en donde se solicitan frutas de primera calidad</p>
+            </div>
+            <div class="card-footer text-center" style="background-color: bisque;">
+                <a href="{% url 'index' %}" class="btn btn-success">Visitar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mx-auto" style="margin: 20px 0px 0px 0px; width: 400px; ">
+            <img src="{% static 'FeriaVirtualApp/img/categoria local.jpg' %}" alt="imagen" height="300px">
+            <div class="card-body" style="height: 210px; background-color: aqua;">
+                <h1 class="card-title">Visitar productos locales</h1>
+                <p class="card-text">Venta de frutas en el comercio local</p>
+            </div>
+            <div class="card-footer text-center" style="background-color: bisque;">
+                <a href="{% url 'Tienda' %}" class="btn btn-success">Visitar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

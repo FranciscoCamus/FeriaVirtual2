@@ -1,0 +1,55 @@
+{% extends "FeriaVirtualApp/base.html" %}
+   
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+
+   <!-- Heading -->
+   <section class="page-section clearfix">
+    <div class="container">
+      <div class="intro">
+        <img class="intro-img img-fluid mb-3 mb-lg-0 rounded" src="{% static 'FeriaVirtualApp/img/Feria virtual frutas.jpeg' %}" alt="" style="width: 670px; height: 600;">
+        <div class="intro-text left-0 text-center bg-faded p-5 rounded">
+          <h2 class="section-heading mb-4" >
+            <span class="section-heading-lower">Calidad</span>
+            <span class="section-heading-upper">La mejor fruta</span>
+          </h2>
+          <p class="mb-3">"¡Del huerto a tu paladar! Disfruta de la frescura y la dulzura de nuestras frutas seleccionadas. 
+            Cada bocado es una explosión de sabor natural y salud para ti y tu familia. ¡Ven y descubre la frescura que solo 
+            las frutas pueden ofrecer! 🍎🍊🍇 #SaborNaturaleza"
+          </p>
+         
+        </div>
+      </div>
+    </div>
+  </section>
+  
+    <!-- Message -->
+    <section class="page-section cta">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-9 mx-auto">
+            <div class="cta-inner text-center rounded">
+              <h2 class="section-heading mb-4">
+                <span class="section-heading-upper">Compromiso total</span>
+                <span class="section-heading-lower">Garantizado</span>
+              </h2>
+              <p class="mb-0">
+                "Tu satisfacción es nuestra prioridad absoluta. Con más de 30 años de experiencia en el mundo de las frutas,
+                 en Maipo Grande nos comprometemos a brindarte la frescura y calidad que mereces. Desde la plantación hasta
+                tu mesa, trabajamos con pasión para llevar la naturaleza directamente a tu hogar, siempre a tiempo y con un servicio
+                 profesional impecable. ¡Descubre el sabor auténtico de la naturaleza!" 🍎🍊🍇 #FrescuraGarantizada</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</html>
+{% endblock %}
